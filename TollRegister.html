@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <nav>
+        <a href="../HTML/TollIndex.html">Home</a>
+        <a href="../HTML/TollRegister.html">Register Vehicle</a>
+        <a href="../HTML/TollStatistics.html">Statistcs</a>
+        <a href="../HTML/TollAboutUs.html">About us</a>
+        
+    </nav>
+    <script>
+        function submitForm(){
+            var form=document.getElementById("myform");
+            form.addEventListener("submit",function (event){
+                event.preventDefault();
+                var name=form.elements.name.value;
+                var email=form.email.value;
+            })
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Vehicle Registration Form</h1>
+    <form action="" id="myform" method="post">
+        <h2>Personal information</h2>
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name" required>
+        <br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+
+        <h1>Vehicle Information</h1>
+        <label for="Vehicle_type">Vehicle Type:</label>
+        <select id="Vehicle_type" name="Vehicle_type" required>
+            <option value="Bikes">Bike</option>
+            <option value="LMV">LMV</option>
+            <option value="LMV">HMV</option>
+            <option value="HMV">Heavy trucks</option>
+            <br>
+        </select>
+
+            <h2>Payment information</h2>
+            <label for="credit_card">Credit Card Number:</label>
+            <input type="text" id="credit_card" name="credit_card">
+            <br>
+
+            <label for="expiry_date">Expiry date:</label>
+            <input type="text" id="expiry_date" name="expiry_date">
+            <br>
+
+            <button type="submit">Register vehicle</button>
+
+        
+    </form>
+</body>
+</html>

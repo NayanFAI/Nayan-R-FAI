@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../JQuery/JQuery.min.js"></script>
+    <script src="../JQuery/JS/TollMgr.js"></script>
+    <link rel="stylesheet" href="../css/mainstyle.css">
+    <script>
+        const mgrObj = new TollManager();
+        function onAddFeature() {
+            const id = Number($("#txtNewId").val());
+            const details = $("#txtDescription").val();
+            const date = new Date($("#txtNewDate").val());
+           
+            const amount = Number($("#txtNewamount").val());
+            const category = $("#s1NewCategory").val();
+            const vehicle = new vehicle(id, details, date, amount, category);
+            mgrObj.addNewVehicle(vehicle);
+            alert("Vehicle added successfully");
+            //3 ways to get a number from string
+        }
+        function onUpdateFeature() {
+            const id = Number($('#txtid').val());
+            const details = $('#txtDesc').val();
+            const date = new Date($("#txtDate").val());
+            const amount = Number($('#txtAmount').val())
+            const category = $("#slCategory").val();
+            const vehicle = new vehicle(id, details, date, amount, category)
+            debugger;
+            try {
+                mgrObj.updateVehicle(id, vehicle);
+                alert('vewhicle updated successfully');
+                $('div').fadeOut(2000);
+            } catch (err) {
+                alert(err)
+            }
+        }
+        function getRevenueByDate() {
+            let date=new Date(document.getElementById("txtFindDate").value);
+            let records = mgrObj.findExpenseByDate(date);
+            console.log(records);
+            $("div").fadeOut(10);
+            $("div:first").fadeIn(2000);
+            $("table").find("tr:gt(0)").remove();
+            for (const rec of records) {
+                const tr = `<tr><td>${rec.id}</td><td>${rec.details}</td><td>${rec.date}</td><td>${rec.amount}</td><td>${rec.category}</td><td><a href="#" onclick="getRecord(${rec.id})">Edit</td></tr>`;
+                $("table").append(tr);
+            }
+        }
+        function getRevenueByCategory() {
+            let category = document.getElementById("txtCategory").value;
+            let records = mgrObj.findVehicleByCategory(category);
+            console.log(records);
+            $("div").fadeOut(10);
+            $("div:first").fadeIn(2000);
+            $("table").find("tr:gt(0)").remove();
+            for (const rec of records) {
+                const tr = `<tr><td>${rec.id}</td><td>${rec.details}</td><td>${rec.category}</td><td>${rec.amount}</td><td>${rec.category}</td><td><a href="#" onclick="getRecord(${rec.id})">Edit</td></tr>`;
+                $("table").append(tr);
+            }
+        }
+
+        function dateHelper(dt) {
+            const date = new Date(dt);
+            const str = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+            console.log(str);
+            return str;
+
+        }
+       
+
+        const eventMapping = () => {
+            $("div").fadeOut(2000);
+            $("li>a:first").click(() => {
+                $("div").fadeOut(2000)
+                $("div:first").fadeIn(2000)
+                populate();
+            })
+
+            $("li>a:eq(1)").click(() => {
+                $("div").fadeOut(2000)
+                $("div:eq(2)").fadeIn(2000)
+            })
+            $("li>a:eq(2)").click(() => {
+                $("div").fadeOut(2000)
+                $("div:eq(3)").fadeIn(2000)
+                //getExpensesByDate();
+                //     const datenow = prompt("Enter the expense date you want to filter");    
+            })
+            $("li>a:eq(3)").click(() => {
+                $("div").fadeOut(2000)
+                $("div:eq(4)").fadeIn(2000);
+            })
+            $("li>a:last").click(() => {
+                $("div").fadeOut(2000)
+                $("div:last").fadeIn(2000)
+            })
+            $("button:eq(1)").click(onAddFeature);
+            $("button:first").click(onUpdateFeature);
+
+        }
+        function getRecord(id) {
+            $("div").fadeOut(2000);
+            $("div:eq(1)").fadeIn(2000);
+            let records = mgrObj.getAllVehicles().find((e) => e.id == id);
+            if (records != null) {
+                $("#txtid").val(records.id)
+                $("#txtDesc").val(records.details)
+                // $("#txtDate").val(records.date)
+                document.getElementById("txtDate").valueAsDate = new Date(records.date);
+                $("#txtAmount").val(records.amount)
+                $("#txtCategory").val(records.category)
+            }
+        }
+        function populate() {
+            const records = mgrObj.getAllVehicles();
+            $("table").find("tr:gt(0)").remove();
+            for (const rec of records) {
+                const tr = `<tr><td>${rec.id}</td><td>${rec.details}</td><td>${rec.date}</td><td>${rec.amount}</td><td>${rec.category}</td><td><a href="#" onclick="getRecord(${rec.id})">Edit</td></tr>`;
+                $("table").append(tr);
+            }
+        }
+        $().ready(() => {
+            eventMapping();
+
+        })
+    </script>
+
+</head>
+
+<body>
+    <h1>Navayuga Infrastructure </h1>
+    <hr>
+    <nav>
+        <ul class="menu">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Register vehicle</a></li>
+            <li><a href="#">statistics</a></li>
+            
+            <li><a href="#">About us</a></li>
+        </ul>
+    </nav>
+    <div>
+        <h2>List of Vehicles</h2>
+        <table border="1">
+            <tr>
+                <th>Vehicle no</th>
+                <th>Vehicle Details</th>
+                <th>Travel Date</th>
+                <th>Toll Amount</th>
+                <th>Revenue Category</th>
+                <th>Options</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h2>Vehicle Details</h2>
+        <section>
+            <p>
+                enter the vehicle number:<input type="number" disabled id="txtid" />
+            </p>
+            <p>
+                enter the description:<input id="txtDesc" minlength="5" maxlength="50" />
+            </p>
+            <p>
+                enter the Date:<input type="date" id="txtDate" />
+            </p>
+            <p>
+                enter the amount:<input type="number" id="txtAmount" />
+            </p>
+            <p>
+                Select the category:<select id="slCategory">
+                    <option>Bike</option>
+                    <option>LMV</option>
+                    <option>HMV</option>
+                    <option>Trucks</option>
+                </select>
+            </p>
+            <p>
+                <button>Update Details</button>
+            </p>
+        </section>
+    </div>
+    <div>
+        <h2>Add new Vehicle</h2>
+        <section>
+            <p>
+                enter the vehicle No:<input id="txtNewId" />
+            </p>
+            <p>
+                enter the description:<input id="txtDescription" minlength="5" maxlength="50" />
+            </p>
+            <p>
+                enter the Date:<input type="date" id="txtNewDate" />
+            </p>
+            <p>
+                enter the amount:<input type="number" id="txtNewAmount" />
+            </p>
+            <p>
+                Select the category:<select id="s1NewCategory">
+                    <option>Bike</option>
+                    <option>LMV</option>
+                    <option>HMV</option>
+                    <option>Trucks</option>
+                </select>
+            </p>
+            <p>
+                <button>Register vehicle</button>
+            </p>
+        </section>
+    </div>
+
+    
+
+    <div>
+        <h2>statistics</h2>
+        <section>
+            <p>
+                enter the date to find revenue:<input id="txtFindDate" placeholder="enter date" type="text" />
+            </p>
+            <p><button onclick="getRevenueByDate()">Find Revenue</button></p>
+        </section>
+    </div>
+    <div>
+        <h2>Find revenue by Category</h2>
+        <section>
+            <p>
+                enter the category to find revenue:<input id="txtCategory" placeholder="enter category" type="text" />
+            </p>
+            <p><button onclick="getRevenueByCategory()">Find revenue</button></p>
+        </section>
+    </div>
+    <div>
+        <h2>About Us</h2>
+    </div>
+</body>
+
+</html>
